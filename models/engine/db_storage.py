@@ -16,6 +16,7 @@ classes = {
             "user": User
         }
 
+
 class DBStorage:
     """Interacts with the MySQL db.
     """
@@ -25,12 +26,17 @@ class DBStorage:
     def __init__(self):
         """Initializes a DBStorage object.
         """
-        ETA_DB_USER     = getenv('ETA_DB_USER')
-        ETA_DB_PWD      = getenv('ETA_DB_PWD')
-        ETA_DB_HOST     = getenv('ETA_DB_HOST')
-        ETA_DB_NAME     = getenv('ETA_DB_NAME')
+        ETA_DB_USER = getenv('ETA_DB_USER')
+        ETA_DB_PWD = getenv('ETA_DB_PWD')
+        ETA_DB_HOST = getenv('ETA_DB_HOST')
+        ETA_DB_NAME = getenv('ETA_DB_NAME')
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
-                                      format(ETA_DB_USER, ETA_DB_PWD, ETA_DB_HOST, ETA_DB_NAME))
+                                      format(
+                                          ETA_DB_USER,
+                                          ETA_DB_PWD,
+                                          ETA_DB_HOST,
+                                          ETA_DB_NAME
+                                          ))
 
     def all(self, cls=None):
         """Gets all from db.
@@ -64,7 +70,10 @@ class DBStorage:
         """Reloads data from the database.
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(
+                bind=self.__engine,
+                expire_on_commit=False
+                )
         sssn = scoped_session(session_factory)
         self.__session = sssn
 
@@ -72,6 +81,7 @@ class DBStorage:
         """Remove the private session attribute.
         """
         self.__session.remove()
+
     def get(self, cls, id):
         """Retrieve object by id
         """
