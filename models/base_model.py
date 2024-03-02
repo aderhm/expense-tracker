@@ -11,6 +11,7 @@ import uuid
 
 Base = declarative_base()
 
+
 class BaseModel:
     """The BaseModel class from which future classes will be derived.
     """
@@ -43,7 +44,8 @@ class BaseModel:
     def __str__(self):
         """Represents the BaseModel class as a string.
         """
-        return "[{:s}] ({:s}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{:s}] ({:s}) {}".format(
+                self.__class__.__name__, self.id, self.__dict__)
 
     def save(self):
         """Saves the last update time
