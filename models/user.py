@@ -16,7 +16,9 @@ class User(BaseModel, Base):
     username = Column(String(128), nullable=False)
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
-    expenses = relationship("Expense", backref="user")
+    expenses = relationship("Expense", backref="users")
+    incomes = relationship("Income", backref="users")
+    goals = relationship("Goal", backref="users")
 
     def __init__(self, *args, **kwargs):
         """Initializes the User.
