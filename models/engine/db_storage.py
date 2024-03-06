@@ -5,9 +5,13 @@
 import models
 import sqlalchemy
 from models.base_model import BaseModel, Base
+from models.expense import Expense
+from models.goal import Goal
+from models.income import Income
+from models.user import User
 from os import getenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {
             "expense": Expense,
@@ -87,5 +91,13 @@ class DBStorage:
         """
         if cls is not None and id is not None:
             return self.__session.query(cls).filter(cls.id == id).first()
+        else:
+            return None
+
+    def check_account_existence(self, email):
+        """Retrieve user by email.
+        """
+        if email is not None:
+            return self.__session.query(User).filter(User.email == email).first()
         else:
             return None

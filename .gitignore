@@ -1,2 +1,10 @@
-/setup_mysql.sql
-/create_db_tables.sql
+/mysql_setup.sql
+/mysql_create_tables.sql
+/mysql_alter_tables_adding_dates_columns.sql
+/run
+/models/__pycache__
+/models/engine/__pycache__
+/api/__pycache__
+/api/v1/__pycache__
+/api/v1/views/__pycache__
+
