@@ -69,7 +69,7 @@ def post_expense():
         return jsonify({
             "message": "Category and amount are required!"
         }), 400
-    
+
     new_expense = Expense(
         category=category,
         description=description,

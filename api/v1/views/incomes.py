@@ -63,7 +63,7 @@ def post_income():
         return jsonify({
             "message": "Category and amount are required!"
         }), 400
-    
+
     new_income = Income(
         category=category,
         amount=amount,

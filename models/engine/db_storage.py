@@ -99,7 +99,9 @@ class DBStorage:
         """Retrieve user by email.
         """
         if email is not None:
-            return self.__session.query(User).filter(User.email == email).first()
+            return self.__session.query(User).filter(
+                User.email == email
+                ).first()
         else:
             return None
 
@@ -115,6 +117,8 @@ class DBStorage:
         """Retrieve objects by a foreign key.
         """
         if cls is not None and fk is not None:
-            return self.__session.query(cls).filter(cls.user_id == fk).all()
+            return self.__session.query(cls).filter(
+                cls.user_id == fk
+                ).all()
         else:
             return None

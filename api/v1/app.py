@@ -10,13 +10,13 @@ from flask_jwt_extended import JWTManager
 from models import storage
 from models.token_block_list import TokenBlockList
 
-
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.register_blueprint(appi)
 CORS(app, resources={'/*': {'origins': os.getenv('ETA_API_HOST', '0.0.0.0')}})
 
 jwt = JWTManager(app)
+
 
 @app.teardown_appcontext
 def teardownflask(e):
