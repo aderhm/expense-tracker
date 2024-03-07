@@ -34,7 +34,7 @@ def goals():
 @appi.route('/goal/<goal_id>', methods=['GET'], strict_slashes=False)
 @jwt_required()
 def goal(goal_id):
-    """Gets an goal by id.
+    """Gets a goal by id.
     """
     gl = storage.get(Goal, goal_id)
     if not gl:
@@ -67,8 +67,7 @@ def post_goal():
 
     if not purpose or not target_amount or (not monthly_saving_amount and not deadline):
         return jsonify({
-            "message": "Purpose, target amount, \
-                and monthly_saving_amount or deadline are required!"
+            "message": "Purpose, target amount, and monthly saving amount or deadline are required!"
         }), 400
 
     new_goal = Goal(
@@ -98,7 +97,7 @@ def post_goal():
 @appi.route('/goal/<goal_id>', methods=['PUT'], strict_slashes=False)
 @jwt_required()
 def put_goal(goal_id):
-    """Updates an goal.
+    """Updates a goal.
     """
 
     gl = storage.get(Goal, goal_id)
@@ -130,7 +129,7 @@ def put_goal(goal_id):
 @appi.route('/goal/<goal_id>', methods=['DELETE'], strict_slashes=False)
 @jwt_required()
 def del_goal(goal_id):
-    """Deletes an goal.
+    """Deletes a goal.
     """
     gl = storage.get(Goal, goal_id)
     if not gl:
