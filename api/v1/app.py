@@ -4,6 +4,7 @@
 
 import os
 from api.v1.views import appi
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -12,6 +13,7 @@ from models.token_block_list import TokenBlockList
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=365)
 app.register_blueprint(appi)
 CORS(app, resources={'/*': {'origins': os.getenv('ETA_API_HOST', '0.0.0.0')}})
 
