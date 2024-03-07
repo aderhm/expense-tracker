@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 """Contains class BaseModel
 """
-
 import models
-import sqlalchemy
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 
+time = "%Y-%m-%dT%H:%M:%S.%f"
 Base = declarative_base()
 
 
@@ -53,6 +52,17 @@ class BaseModel:
         self.updated_at = datetime.utcnow()
         models.storage.new(self)
         models.storage.save()
+
+    def to_dict(self):
+        """Returns a dictionary containing all keys/values of the instance.
+        """
+        new_dict = self.__dict__.copy()
+        if "created_at" in new_dict:
+            new_dict['created_at'] = new_dict['created_at'].strftime(time)
+        if "updated_at" in new_dict:
+            new_dict['updated_at'] = new_dict['updated_at'].strftime(time)
+        new_dict['__class__'] = self.__class__.__name__
+        return new_dict
 
     def delete(self):
         """Deletes the current instance from the storage.

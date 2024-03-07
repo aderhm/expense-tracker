@@ -1,9 +1,8 @@
 #!/usr/bin/python3
-"""Contains the index route.
+"""Contains the index routes.
 """
 
 from api.v1.views import appi
-from api.v1.app import revoked_tokens
 from flask import jsonify, request
 from flask_jwt_extended import (
         create_access_token,
@@ -13,23 +12,10 @@ from flask_jwt_extended import (
         jwt_required,
         verify_jwt_in_request
         )
-from functools import wraps
 from hashlib import md5
 from models import storage
 from models.user import User
-
-
-def check_revoked_token(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        verify_jwt_in_request()
-        jti = get_jwt_identity()['jti']
-        if jti in revoked_tokens:
-            return jsonify({
-                'message': 'Token has been revoked. Please log in again.'
-                }), 401
-        return fn(*args, **kwargs)
-    return wrapper
+from models.token_block_list import TokenBlockList
 
 
 @appi.route('/status', methods=['GET'], strict_slashes=False)
@@ -63,7 +49,7 @@ def register():
     storage.new(new_user)
     storage.save()
 
-    access_token = create_access_token(identity=email)
+    access_token = create_access_token(identity=new_user.id)
     return jsonify({'access_token': access_token}), 201
 
 
@@ -76,11 +62,10 @@ def login():
     password = data.get('password')
 
     user = storage.check_account_existence(email)
-    print(user.password)
     if not user or user.password != md5(password.encode()).hexdigest():
         return jsonify({'message': 'Invalid email or password'}), 401
 
-    access_token = create_access_token(identity=email)
+    access_token = create_access_token(identity=user.id)
     return jsonify({'access_token': access_token}), 200
 
 
@@ -88,13 +73,13 @@ def login():
 @jwt_required()
 def logout():
     jti = get_jwt()['jti']
-    revoked_tokens.add(jti)
+    token_blocklist = TokenBlockList(jti=jti)
+    storage.new(token_blocklist)
+    storage.save()
     return jsonify({'message': 'Successfully logged out'}), 200
+
 
 @appi.route('/protected', methods=['GET'], strict_slashes=False)
 @jwt_required()
-@check_revoked_token
 def protected():
-    token = get_jwt()
-    request.headers['Authorization'] = f"Bearer {token}"
     return jsonify({'message': 'This is a protected endpoint'}), 200

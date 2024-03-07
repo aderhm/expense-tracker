@@ -8,16 +8,17 @@ from models.base_model import BaseModel, Base
 from models.expense import Expense
 from models.goal import Goal
 from models.income import Income
+from models.token_block_list import TokenBlockList
 from models.user import User
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {
-            "expense": Expense,
-            "goal": Goal,
-            "income": Income,
-            "user": User
+            "Expense": Expense,
+            "Goal": Goal,
+            "Income": Income,
+            "User": User
         }
 
 
@@ -99,5 +100,21 @@ class DBStorage:
         """
         if email is not None:
             return self.__session.query(User).filter(User.email == email).first()
+        else:
+            return None
+
+    def get_token(self, jti):
+        if jti is not None:
+            return self.__session.query(TokenBlockList).filter(
+                TokenBlockList.jti == jti
+            ).scalar()
+        else:
+            return None
+
+    def get_by_fk(self, cls, fk):
+        """Retrieve objects by a foreign key.
+        """
+        if cls is not None and fk is not None:
+            return self.__session.query(cls).filter(cls.user_id == fk).all()
         else:
             return None

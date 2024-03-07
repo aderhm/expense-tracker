@@ -8,8 +8,8 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from models import storage
+from models.token_block_list import TokenBlockList
 
-revoked_tokens = set()
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
@@ -30,6 +30,37 @@ def error_404(err):
     """Handles the 404 HTTP error.
     """
     return jsonify(err="Not found"), 404
+
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_data):
+    return jsonify({
+        "error": "token_expired",
+        "message": "Token has expired"
+        }), 401
+
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return jsonify({
+        "error": "invalid_token",
+        "message": "Signature verification failed"
+        }), 401
+
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return jsonify({
+        "error": "authorization_required",
+        "message": "Token is missing"
+        }), 401
+
+
+@jwt.token_in_blocklist_loader
+def token_in_blocklist_callback(jwt_header, jwt_data):
+    jti = jwt_data['jti']
+    token = storage.get_token(jti)
+    return token is not None
 
 
 if __name__ == "__main__":
