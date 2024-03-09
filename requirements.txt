@@ -102,7 +102,6 @@ pyRFC3339==1.1
 python-dateutil==2.8.1
 pytz==2022.1
 pyxdg==0.27
-PyYAML==5.4.1
 referencing==0.33.0
 regex==2023.12.25
 reportlab==3.6.8
