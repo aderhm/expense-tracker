@@ -128,7 +128,6 @@ Werkzeug==2.2.2
 wrapt==1.16.0
 wxPython==4.0.7
 xdg==5
-xkit==0.0.0
 zipp==1.0.0
 zope.component==4.3.0
 zope.event==4.4
