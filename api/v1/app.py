@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=365)
 app.register_blueprint(appi)
-CORS(app, resources={'/*': {'origins': os.getenv('ETA_API_HOST', '0.0.0.0')}})
+CORS(app, resources={'/*': {'origins': '*'}})
 
 jwt = JWTManager(app)
 
